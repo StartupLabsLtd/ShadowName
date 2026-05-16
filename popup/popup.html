@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>ShadowName</h1>
+      <div class="section">
+        <label for="name-input">Your Real Name</label>
+        <input type="text" id="name-input" placeholder="e.g. John Smith" />
+        <button id="save-btn">Save</button>
+      </div>
+      <div class="section" id="alias-section" style="display: none">
+        <label>Current Domain Alias</label>
+        <div class="alias-row">
+          <div class="alias-box" id="alias-display"></div>
+          <button class="copy-btn" id="copy-btn" title="Copy to clipboard">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+          </button>
+        </div>
+        <div class="domain-label" id="domain-label"></div>
+      </div>
+      <div class="status" id="status"></div>
+    </div>
+    <script src="popup.js"></script>
+  </body>
+</html>
