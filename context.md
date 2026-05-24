@@ -45,7 +45,10 @@ Each base character maps to a set of visually similar Unicode characters from va
 
 ```
 alias_char = base_name[i] -> homoglyph_map[base_name[i]]
-selected_homoglyph = homoglyphs[ hash(domain + char_index + salt) % len(homoglyphs) ]
+selected_homoglyph = homoglyphs[ hash(domain + char_index + pepper) % len(homoglyphs) ]
 ```
 
-The hash function takes the domain, the character position, and a fixed salt to ensure each character selection is independently randomized, preventing pattern reconstruction.
+Where:
+- `pepper` is a secret key (auto-generated or user-chosen), stored locally.
+
+The hash function takes the domain, character position, and a per-install secret key to ensure each character selection is independently randomized and unique per user. Set the same pepper on multiple browser profiles to generate matching aliases across devices.

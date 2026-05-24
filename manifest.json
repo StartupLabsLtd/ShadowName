@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "ShadowName",
-  "version": "1.1.0",
-  "description": "Generate per-domain name aliases using homoglyph substitution to cloak your real name from cross-site tracking.",
+  "version": "1.1.1",
+  "description": "Makes your name look different on every website so people searching for you won't find your activity across the web.",
   "permissions": ["storage", "activeTab", "tabs"],
   "background": {
     "service_worker": "background.js"

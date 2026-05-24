@@ -16,6 +16,16 @@
         <input type="text" id="last-input" placeholder="e.g. Smith" />
         <button id="save-btn">Save</button>
       </div>
+      <div class="section">
+        <details class="advanced">
+          <summary>Advanced</summary>
+          <label for="pepper-input">Secret Key (pepper)</label>
+          <div class="pepper-row">
+            <input type="text" id="pepper-input" placeholder="Optional secret phrase" />
+            <button class="gen-btn" id="gen-pepper-btn" title="Generate random key">&#x21bb;</button>
+          </div>
+        </details>
+      </div>
       <div class="section" id="alias-section" style="display: none">
         <label>Current Domain Aliases</label>
         <div class="alias-row">

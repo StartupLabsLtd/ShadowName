@@ -132,3 +132,51 @@ button:hover {
 .status.visible {
   opacity: 1;
 }
+
+.advanced {
+  margin-top: 0;
+}
+
+.advanced summary {
+  font-size: 11px;
+  color: #666680;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 0;
+  user-select: none;
+}
+
+.advanced summary:hover {
+  color: #9a9ab0;
+}
+
+.advanced[open] {
+  margin-bottom: 16px;
+}
+
+.advanced[open] summary {
+  margin-bottom: 10px;
+  color: #9a9ab0;
+}
+
+.pepper-row {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.pepper-row input {
+  flex: 1;
+}
+
+.gen-btn {
+  width: auto;
+  margin-top: 0;
+  padding: 0 14px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
