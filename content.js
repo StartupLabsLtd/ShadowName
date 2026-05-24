@@ -3,71 +3,12 @@
   var firstName = null;
   var lastName = null;
   var fullName = null;
-  var addedIcons = [];
 
   function init(data) {
     aliases = data.aliases;
     firstName = data.firstName || "";
     lastName = data.lastName || "";
     fullName = (firstName + " " + lastName).trim();
-  }
-
-  function replaceText(node) {
-    if (!firstName && !lastName) return;
-    if (node.nodeType === Node.TEXT_NODE) {
-      var v = node.nodeValue;
-      var changed = false;
-      if (fullName && v.includes(fullName)) {
-        v = v.split(fullName).join(aliases.full);
-        changed = true;
-      }
-      if (firstName && v.includes(firstName)) {
-        v = v.split(firstName).join(aliases.first);
-        changed = true;
-      }
-      if (lastName && v.includes(lastName)) {
-        v = v.split(lastName).join(aliases.last);
-        changed = true;
-      }
-      if (changed) node.nodeValue = v;
-    } else if (
-      node.nodeType === Node.ELEMENT_NODE &&
-      node.tagName !== "SCRIPT" &&
-      node.tagName !== "STYLE" &&
-      node.tagName !== "NOSCRIPT"
-    ) {
-      for (var i = 0; i < node.childNodes.length; i++) {
-        replaceText(node.childNodes[i]);
-      }
-    }
-  }
-
-  function replaceInputs() {
-    if (!firstName && !lastName) return;
-    var inputs = document.querySelectorAll(
-      'input[type="text"], input[type="search"], input:not([type]), textarea'
-    );
-    for (var i = 0; i < inputs.length; i++) {
-      var input = inputs[i];
-      var v = input.placeholder || input.value || "";
-      var changed = false;
-      if (fullName && v.includes(fullName)) {
-        v = v.split(fullName).join(aliases.full);
-        changed = true;
-      }
-      if (firstName && v.includes(firstName)) {
-        v = v.split(firstName).join(aliases.first);
-        changed = true;
-      }
-      if (lastName && v.includes(lastName)) {
-        v = v.split(lastName).join(aliases.last);
-        changed = true;
-      }
-      if (changed) {
-        if (input.placeholder) input.placeholder = v;
-        if (input.value) input.value = v;
-      }
-    }
   }
 
   function isFirstNameField(el) {
@@ -168,7 +109,6 @@
     });
 
     wrap.appendChild(icon);
-    addedIcons.push(wrap);
   }
 
   function scanFormFields() {
@@ -181,16 +121,10 @@
     }
   }
 
-  function run() {
-    replaceText(document.body);
-    replaceInputs();
-    scanFormFields();
-  }
-
   function onMessage(request, sender, sendResponse) {
     if (request.type === "REPLACE") {
       init(request);
-      run();
+      scanFormFields();
       sendResponse({ success: true });
     } else if (request.type === "GET_ALIAS") {
       sendResponse({ aliases: aliases });
@@ -204,19 +138,12 @@
     function (response) {
       if (response && response.aliases) {
         init(response);
-        run();
+        scanFormFields();
       }
     }
   );
 
-  var observer = new MutationObserver(function (mutations) {
-    for (var i = 0; i < mutations.length; i++) {
-      var mutation = mutations[i];
-      for (var j = 0; j < mutation.addedNodes.length; j++) {
-        replaceText(mutation.addedNodes[j]);
-      }
-    }
-    replaceInputs();
+  var observer = new MutationObserver(function () {
     scanFormFields();
   });
 

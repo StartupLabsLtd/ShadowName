@@ -11,6 +11,16 @@
   var domainLabel = document.getElementById("domain-label");
   var status = document.getElementById("status");
 
+  var PEPPER_CHARS = "abcdefghijklmnopqrstuvwxyz0123456789";
+
+  function generatePepper() {
+    var s = "";
+    for (var i = 0; i < 12; i++) {
+      s += PEPPER_CHARS[Math.floor(Math.random() * PEPPER_CHARS.length)];
+    }
+    return s;
+  }
+
   function showStatus(msg, duration) {
     status.textContent = msg;
     status.classList.add("visible");
@@ -20,15 +30,14 @@
   }
 
   function loadSaved() {
-    chrome.storage.local.get(
-      ["firstName", "lastName", "pepper"],
-      function (result) {
-        if (result.firstName) firstInput.value = result.firstName;
-        if (result.lastName) lastInput.value = result.lastName;
-        if (result.pepper) pepperInput.value = result.pepper;
-        if (result.firstName || result.lastName) showAliases();
-      }
-    );
+    chrome.storage.local.get(["firstName", "lastName"], function (result) {
+      if (result.firstName) firstInput.value = result.firstName;
+      if (result.lastName) lastInput.value = result.lastName;
+      if (result.firstName || result.lastName) showAliases();
+    });
+    chrome.storage.sync.get(["pepper"], function (result) {
+      if (result.pepper) pepperInput.value = result.pepper;
+    });
   }
 
   function showAliases() {
@@ -53,6 +62,9 @@
             if (response.last) aliasLast.textContent = response.last;
             if (response.full) aliasFull.textContent = response.full;
             aliasSection.style.display = "block";
+            chrome.storage.sync.get(["pepper"], function (r) {
+              if (r.pepper) pepperInput.value = r.pepper;
+            });
           }
         }
       );
@@ -62,27 +74,28 @@
   function save() {
     var first = firstInput.value.trim();
     var last = lastInput.value.trim();
-    var pepper = pepperInput.value.trim();
+    var pepperVal = pepperInput.value.trim();
     if (!first && !last) {
       showStatus("Enter at least one name");
       return;
     }
+    if (!pepperVal) {
+      pepperVal = generatePepper();
+      pepperInput.value = pepperVal;
+    }
     chrome.storage.local.set(
-      { firstName: first, lastName: last, pepper: pepper },
+      { firstName: first, lastName: last },
       function () {
-        showStatus("Saved!");
-        showAliases();
+        chrome.storage.sync.set({ pepper: pepperVal }, function () {
+          showStatus("Saved!");
+          showAliases();
+        });
       }
     );
   }
 
   genPepperBtn.addEventListener("click", function () {
-    var chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-    var s = "";
-    for (var i = 0; i < 12; i++) {
-      s += chars[Math.floor(Math.random() * chars.length)];
-    }
-    pepperInput.value = s;
+    pepperInput.value = generatePepper();
     save();
   });
 

@@ -20,12 +20,12 @@ function loadSecrets(callback) {
     callback(pepper);
     return;
   }
-  chrome.storage.local.get(["pepper"], function (result) {
+  chrome.storage.sync.get(["pepper"], function (result) {
     if (!result.pepper) {
       result.pepper = generatePepper();
-      chrome.storage.local.set({ pepper: result.pepper });
+      chrome.storage.sync.set({ pepper: result.pepper });
     }
-    pepper = result.pepper || "";
+    pepper = result.pepper;
     callback(pepper);
   });
 }
@@ -143,12 +143,13 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
 });
 
 chrome.storage.onChanged.addListener(function (changes, area) {
-  if (
-    area === "local" &&
-    (changes.firstName || changes.lastName || changes.pepper)
-  ) {
-    userFirst = null;
-    userLast = null;
+  var namesChanged = area === "local" && (changes.firstName || changes.lastName);
+  var pepperChanged = area === "sync" && changes.pepper;
+  if (namesChanged || pepperChanged) {
+    if (namesChanged) {
+      userFirst = null;
+      userLast = null;
+    }
     pepper = null;
     homoglyphText = null;
     chrome.tabs.query({}, function (tabs) {
