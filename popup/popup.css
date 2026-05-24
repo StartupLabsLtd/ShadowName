@@ -76,19 +76,28 @@ button:hover {
   display: flex;
   gap: 8px;
   align-items: stretch;
+  margin-bottom: 8px;
+}
+
+.alias-row:last-child {
+  margin-bottom: 0;
 }
 
 .alias-box {
   flex: 1;
-  padding: 12px;
+  padding: 10px 12px;
   background: #16162b;
   border: 1px solid #2d2d4a;
   border-radius: 6px;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   color: #6c63ff;
   word-break: break-all;
   text-align: center;
+}
+
+.alias-full {
+  color: #a78bfa;
 }
 
 .copy-btn {
@@ -109,7 +118,7 @@ button:hover {
   font-size: 11px;
   color: #666680;
   text-align: center;
-  margin-top: 6px;
+  margin-top: 10px;
 }
 
 .status {

@@ -1,9 +1,11 @@
 (function () {
-  var nameInput = document.getElementById("name-input");
+  var firstInput = document.getElementById("first-input");
+  var lastInput = document.getElementById("last-input");
   var saveBtn = document.getElementById("save-btn");
   var aliasSection = document.getElementById("alias-section");
-  var aliasDisplay = document.getElementById("alias-display");
-  var copyBtn = document.getElementById("copy-btn");
+  var aliasFirst = document.getElementById("alias-first");
+  var aliasLast = document.getElementById("alias-last");
+  var aliasFull = document.getElementById("alias-full");
   var domainLabel = document.getElementById("domain-label");
   var status = document.getElementById("status");
 
@@ -15,16 +17,15 @@
     }, duration || 2000);
   }
 
-  function loadSavedName() {
-    chrome.storage.local.get(["name"], function (result) {
-      if (result.name) {
-        nameInput.value = result.name;
-        showAlias();
-      }
+  function loadSavedNames() {
+    chrome.storage.local.get(["firstName", "lastName"], function (result) {
+      if (result.firstName) firstInput.value = result.firstName;
+      if (result.lastName) lastInput.value = result.lastName;
+      if (result.firstName || result.lastName) showAliases();
     });
   }
 
-  function showAlias() {
+  function showAliases() {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       if (!tabs[0] || !tabs[0].url) return;
       var url;
@@ -39,10 +40,12 @@
       domainLabel.textContent = domain;
 
       chrome.runtime.sendMessage(
-        { type: "GET_ALIAS_FOR_DOMAIN", domain: domain },
+        { type: "GET_ALIASES_FOR_DOMAIN", domain: domain },
         function (response) {
-          if (response && response.alias) {
-            aliasDisplay.textContent = response.alias;
+          if (response) {
+            if (response.first) aliasFirst.textContent = response.first;
+            if (response.last) aliasLast.textContent = response.last;
+            if (response.full) aliasFull.textContent = response.full;
             aliasSection.style.display = "block";
           }
         }
@@ -50,31 +53,36 @@
     });
   }
 
-  copyBtn.addEventListener("click", function () {
-    var text = aliasDisplay.textContent;
-    if (!text) return;
-    navigator.clipboard.writeText(text).then(function () {
-      showStatus("Copied!");
+  document.querySelectorAll(".copy-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var target = btn.getAttribute("data-target");
+      var el = document.getElementById("alias-" + target);
+      var text = el.textContent;
+      if (!text) return;
+      navigator.clipboard.writeText(text).then(function () {
+        showStatus("Copied!");
+      });
     });
   });
 
   saveBtn.addEventListener("click", function () {
-    var name = nameInput.value.trim();
-    if (!name) {
-      showStatus("Please enter a name");
+    var first = firstInput.value.trim();
+    var last = lastInput.value.trim();
+    if (!first && !last) {
+      showStatus("Enter at least one name");
       return;
     }
-    chrome.storage.local.set({ name: name }, function () {
+    chrome.storage.local.set({ firstName: first, lastName: last }, function () {
       showStatus("Saved!");
-      showAlias();
+      showAliases();
     });
   });
 
-  nameInput.addEventListener("keydown", function (e) {
-    if (e.key === "Enter") {
-      saveBtn.click();
-    }
+  [firstInput, lastInput].forEach(function (input) {
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") saveBtn.click();
+    });
   });
 
-  loadSavedName();
+  loadSavedNames();
 })();

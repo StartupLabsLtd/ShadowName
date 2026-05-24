@@ -8,15 +8,37 @@
     <div class="container">
       <h1>ShadowName</h1>
       <div class="section">
-        <label for="name-input">Your Real Name</label>
-        <input type="text" id="name-input" placeholder="e.g. John Smith" />
+        <label for="first-input">First Name</label>
+        <input type="text" id="first-input" placeholder="e.g. John" />
+      </div>
+      <div class="section">
+        <label for="last-input">Last Name</label>
+        <input type="text" id="last-input" placeholder="e.g. Smith" />
         <button id="save-btn">Save</button>
       </div>
       <div class="section" id="alias-section" style="display: none">
-        <label>Current Domain Alias</label>
+        <label>Current Domain Aliases</label>
         <div class="alias-row">
-          <div class="alias-box" id="alias-display"></div>
-          <button class="copy-btn" id="copy-btn" title="Copy to clipboard">
+          <div class="alias-box" id="alias-first"></div>
+          <button class="copy-btn" data-target="first" title="Copy first name alias">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+          </button>
+        </div>
+        <div class="alias-row">
+          <div class="alias-box" id="alias-last"></div>
+          <button class="copy-btn" data-target="last" title="Copy last name alias">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+          </button>
+        </div>
+        <div class="alias-row">
+          <div class="alias-box alias-full" id="alias-full"></div>
+          <button class="copy-btn" data-target="full" title="Copy full name alias">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
               <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
